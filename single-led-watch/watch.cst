@@ -1,0 +1,72 @@
+//
+// Gowin Physical Constraints for Tang Nano 20K (GW2AR-18)
+// For Single LED Second Counter Project
+//
+
+// --- 1. Clock and Reset ---
+// 27MHz System Clock
+IO_LOC "sys_clk" 4; 
+IO_PORT "sys_clk" PULL_MODE=NONE IO_TYPE=LVCMOS33;
+
+// --- 2. Button Inputs ---
+// Connect these names to the ports in your top_module.v
+// NOTE: PULL_MODE=UP is used since buttons typically connect to GND when pressed.
+
+// Button 1: Mode Switch WHEN BUTTONS PRESSED THEY GO HIGH, BECAUSE THEY ARE CONNECTED TO VDD.
+IO_LOC "btn_mode_in" 75; 
+IO_PORT "btn_mode_in" PULL_MODE=DOWN IO_TYPE=LVCMOS33; 
+
+// Button 2: Start/Pause/Resume Toggle (Using PIN 13 - K13 in the schematic)
+IO_LOC "btn_start_in" 74; 
+IO_PORT "btn_start_in" PULL_MODE=DOWN IO_TYPE=LVCMOS33; 
+
+// Button 3: Adjust/Stop (Using PIN 14 - K14 in the schematic)
+IO_LOC "btn_adjust_in" 73; 
+IO_PORT "btn_adjust_in" PULL_MODE=DOWN IO_TYPE=LVCMOS33;
+
+
+// --- 3. 7-Segment Display Outputs (Matches your previous mapping) ---
+// Variable name in top_module.v: seg_out[6:0]
+
+// Segment G (Middle)
+IO_LOC "seg_out[0]" 15; 
+IO_PORT "seg_out[0]" DRIVE=24 IO_TYPE=LVCMOS33;
+
+// Segment F (Top-Left)
+IO_LOC "seg_out[1]" 16; 
+IO_PORT "seg_out[1]" DRIVE=24 IO_TYPE=LVCMOS33;
+
+// Segment E (Bottom-Left)
+IO_LOC "seg_out[2]" 17; 
+IO_PORT "seg_out[2]" DRIVE=24 IO_TYPE=LVCMOS33;
+
+// Segment D (Bottom)
+IO_LOC "seg_out[3]" 18; 
+IO_PORT "seg_out[3]" DRIVE=24 IO_TYPE=LVCMOS33;
+
+// Segment C (Bottom-Right)
+IO_LOC "seg_out[4]" 20; 
+IO_PORT "seg_out[4]" DRIVE=24 IO_TYPE=LVCMOS33;
+
+// Segment B (Top-Right)
+IO_LOC "seg_out[5]" 41; 
+IO_PORT "seg_out[5]" DRIVE=24 IO_TYPE=LVCMOS33;
+
+// Segment A (Top)
+IO_LOC "seg_out[6]" 42; 
+IO_PORT "seg_out[6]" DRIVE=24 IO_TYPE=LVCMOS33;
+
+
+// --- 4. LED Status Outputs (Indicadores de Estado FSM) ---
+
+// LED 1: WATCH State (Pino 25)
+IO_LOC "status_watch" 25; 
+IO_PORT "status_watch" DRIVE=8 IO_TYPE=LVCMOS33;
+
+// LED 2: CHANGE State (Pino 26)
+IO_LOC "status_change" 26; 
+IO_PORT "status_change" DRIVE=8 IO_TYPE=LVCMOS33;
+
+// LED 3: CHRONO State (Pino 27)
+IO_LOC "status_chrono" 27; 
+IO_PORT "status_chrono" DRIVE=8 IO_TYPE=LVCMOS33;
