@@ -1,4 +1,3 @@
-// Arquivo: bcd_para_7seg.v
 // Converte um número BCD de 4 bits para 7 segmentos
 module bcd_para_7seg(
     input  wire [3:0] bcd_in, // Entrada: o número 0000 a 1001

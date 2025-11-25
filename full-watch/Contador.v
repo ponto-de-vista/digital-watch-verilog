@@ -36,7 +36,6 @@ module Contador(
             h_unidade     <= 0;
             h_dezena     <= 0;
         end
-        // 2. Lógica de Clock (Síncrona)
         else begin
             if (config_add) begin
                 case(config_digit)

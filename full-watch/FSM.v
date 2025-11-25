@@ -9,7 +9,12 @@ module FSM(
         output reg [3:0] m_unidade_fsm,
         output reg [3:0] m_dezena_fsm,
         output reg [3:0] h_unidade_fsm,
-        output reg [3:0] h_dezena_fsm);
+        output reg [3:0] h_dezena_fsm,
+        //ARMAZENA A POSICAO QUE ESTA SENDO CONFIGURADA
+        output reg [2:0] config_digit,
+        //VERIFICA SE ESTA NO MODO DE CONFIGURACAO
+        output wire is_config
+        );
 
     reg [1:0] state;
 
@@ -26,9 +31,8 @@ module FSM(
     wire click_change = (btn_change && !prev_change);
 
     //VERIFICA SE QUER ADICIONAR 1 E SE ESTA EM CONFIG
-    assign config_add = (state == CFG && click_change);
-    //ARMAZENA A POSICAO QUE ESTA SENDO CONFIGURADA
-    reg [2:0] config_digit;
+    assign config_add = (state == CFG && click_change);  
+    assign is_config = (state == CFG);   
 
     //FIOS INTERNOS
     wire [3:0] s_unidade_relogio, s_dezena_relogio, m_unidade_relogio, m_dezena_relogio, h_unidade_relogio, h_dezena_relogio;
