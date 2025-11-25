@@ -71,9 +71,9 @@ module FSM(
     );
 
     //DEBOUNCE DA TROCA DE ESTADOS
-    reg mode_stable; // O sinal limpo que a FSM vai usar
-    reg [1:0] mode_sync; // Sincronizador (evita o travamento dos LEDs)
-    reg [19:0] db_counter; // Contador de tempo
+    reg mode_stable; //Sinal limpo do botão de modo
+    reg [1:0] mode_sync; //Sincronizador
+    reg [19:0] db_counter; //Contador de tempo
     localparam DB_TIME = 500_000; //10ms em 50MHz
 
     always @(posedge clk or negedge reset) begin
@@ -82,27 +82,24 @@ module FSM(
             mode_stable <= 0;
             db_counter <= 0;
         end else begin
-            // 1. Sincronização (Joga o sinal sujo para dentro do clock)
+            //Sincronizando a mudança com o clock
             mode_sync[0] <= btn_mode;
             mode_sync[1] <= mode_sync[0];
 
-            // 2. Filtro de Tempo
+            //Estabilizando o sinal
             if (mode_sync[1] != mode_stable) begin
-                // Se o sinal está diferente do estável, conta tempo
+                //Se o sinal está diferente do estável, soma 1 no contador até 500000
                 if (db_counter >= DB_TIME) begin
-                    mode_stable <= mode_sync[1]; // Confirma a mudança
+                    mode_stable <= mode_sync[1]; //Confirma a mudança
                     db_counter <= 0;
                 end else begin
                     db_counter <= db_counter + 1;
                 end
             end else begin
-                // Se o sinal oscilou e voltou, zera a contagem
                 db_counter <= 0;
             end
         end
     end
-    // ---------------------------------------
-
 
     reg prev_mode_limpo;
     //VERIFICA O BOTAO DE TROCA DE MODO DE FORMA LIMPA
@@ -156,7 +153,6 @@ module FSM(
                 h_unidade_fsm = h_unidade_relogio;
                 h_dezena_fsm = h_dezena_relogio;
             end
-
             CRONOMETRO: begin
                 s_unidade_fsm = s_unidade_cronometro;
                 s_dezena_fsm = s_dezena_cronometro;
@@ -167,7 +163,7 @@ module FSM(
             end
             CFG: begin
                 s_unidade_fsm = s_unidade_relogio;
-                s_dezena_fsm = s_dezena_relogio;
+                s_dezena_fsm = s_dezena_relogio;    
                 m_unidade_fsm = m_unidade_relogio;
                 m_dezena_fsm = m_dezena_relogio;
                 h_unidade_fsm = h_unidade_relogio;

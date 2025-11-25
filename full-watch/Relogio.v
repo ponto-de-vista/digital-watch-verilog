@@ -17,8 +17,6 @@ module relogio_simples_top(
     assign LED[1] = (state_out == 2'b01);
     assign LED[0] = (state_out == 2'b10);
 
-
-
     wire [3:0] s_unidade, s_dezena, m_unidade, m_dezena, h_unidade, h_dezena;
     wire is_config;
     wire [2:0] config_digit;
