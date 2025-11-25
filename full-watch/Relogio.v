@@ -4,7 +4,7 @@ module relogio_simples_top(
     input wire btn_start, 
     input wire btn_change, 
     input wire clk,
-    output wire [6:0] HEX0,   // Display de 7-segmentos
+    output wire [6:0] HEX0, // Display de 7-segmentos
     output wire [6:0] HEX1,
     output wire [6:0] HEX2,
     output wire [6:0] HEX3,
@@ -52,33 +52,33 @@ module relogio_simples_top(
 
     //Instancia dos decodificadores
      bcd_para_7seg U_Decodificador_Seg (
-        .bcd_in   (s_unidade), // Conecta o *mesmo* fio interno à entrada 'bcd_in'
-        .segments (valor_hex0)            // Conecta a saída 'segments' aos pinos físicos HEX0
+        .bcd_in   (s_unidade), 
+        .segments (valor_hex0) // Conecta a saída 'segments' aos pinos físicos HEX0
     );
 	 
 	bcd_para_7seg D_Decodificador_Seg (
-        .bcd_in   (s_dezena), // Conecta o *mesmo* fio interno à entrada 'bcd_in'
-        .segments (valor_hex1)            // Conecta a saída 'segments' aos pinos físicos HEX1
+        .bcd_in   (s_dezena), 
+        .segments (valor_hex1) // Conecta a saída 'segments' aos pinos físicos HEX1
     );
 
     bcd_para_7seg U_Decodificador_Min (
-        .bcd_in   (m_unidade), // Conecta o *mesmo* fio interno à entrada 'bcd_in'
-        .segments (valor_hex2)            // Conecta a saída 'segments' aos pinos físicos HEX1
+        .bcd_in   (m_unidade), 
+        .segments (valor_hex2) // Conecta a saída 'segments' aos pinos físicos HEX2
     );
 
     bcd_para_7seg D_Decodificador_Min (
-        .bcd_in   (m_dezena), // Conecta o *mesmo* fio interno à entrada 'bcd_in'
-        .segments (valor_hex3)            // Conecta a saída 'segments' aos pinos físicos HEX1
+        .bcd_in   (m_dezena), 
+        .segments (valor_hex3) // Conecta a saída 'segments' aos pinos físicos HEX1
     );
 
     bcd_para_7seg U_Decodificador_H (
-        .bcd_in   (h_unidade), // Conecta o *mesmo* fio interno à entrada 'bcd_in'
-        .segments (valor_hex4)            // Conecta a saída 'segments' aos pinos físicos HEX1
+        .bcd_in   (h_unidade),
+        .segments (valor_hex4) // Conecta a saída 'segments' aos pinos físicos HEX1
     );
 
     bcd_para_7seg D_Decodificador_H (
-        .bcd_in   (h_dezena), // Conecta o *mesmo* fio interno à entrada 'bcd_in'
-        .segments (valor_hex5)            // Conecta a saída 'segments' aos pinos físicos HEX1
+        .bcd_in   (h_dezena),
+        .segments (valor_hex5) // Conecta a saída 'segments' aos pinos físicos HEX1
     );
 
 endmodule

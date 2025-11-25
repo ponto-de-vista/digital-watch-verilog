@@ -1,14 +1,11 @@
-// Converte um número BCD de 4 bits para 7 segmentos
 module bcd_para_7seg(
     input  wire [3:0] bcd_in, // Entrada: o número 0000 a 1001
     output reg  [6:0] segments  // Saída: os 7 LEDs
 );
 
-    // Sempre que o número de entrada mudar...
     always @(bcd_in)
     begin
         case(bcd_in)
-            // Usando os valores da sua imagem original
             4'b0000: segments = 7'b1000000; // 0
             4'b0001: segments = 7'b1111001; // 1
             4'b0010: segments = 7'b0100100; // 2
