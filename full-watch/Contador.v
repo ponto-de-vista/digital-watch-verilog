@@ -37,7 +37,9 @@ module Contador(
             h_dezena     <= 0;
         end
         else begin
+            //Verifica se esta no modo de config, e apertou para mudar um digito
             if (config_add) begin
+                //Verifica qual digito esta sendo configurado
                 case(config_digit)
                     3'd0: s_unidade <= (s_unidade == 9) ? 0 : s_unidade + 1;
                     3'd1: s_dezena  <= (s_dezena  == 5) ? 0 : s_dezena  + 1;
