@@ -13,10 +13,13 @@ module FSM(
         //ARMAZENA A POSICAO QUE ESTA SENDO CONFIGURADA
         output reg [2:0] config_digit,
         //VERIFICA SE ESTA NO MODO DE CONFIGURACAO
-        output wire is_config
+        output wire is_config,
+
+        output [1:0] state_out
         );
 
     reg [1:0] state;
+    assign state_out = state;
 
     localparam RELOGIO = 2'b00, CRONOMETRO = 2'b01, CFG = 2'b10;
 
@@ -25,8 +28,7 @@ module FSM(
     assign crono_reset = (state == CRONOMETRO && btn_change) || state == RELOGIO;
 
     //DETECTAR BORDA
-    reg prev_mode, prev_start, prev_change;
-    wire click_mode = (btn_mode && !prev_mode);
+    reg prev_start, prev_change;
     wire click_start = (btn_start && !prev_start);
     wire click_change = (btn_change && !prev_change);
 
@@ -39,9 +41,9 @@ module FSM(
     wire [3:0] s_unidade_cronometro, s_dezena_cronometro, m_unidade_cronometro, m_dezena_cronometro, h_unidade_cronometro, h_dezena_cronometro;
 
     Contador Contador_relogio (
-        .clk    (clk),
-        .rst  (reset),
-        .enable  (state != CFG),
+        .clk (clk),
+        .rst (reset),
+        .enable (state != CFG),
         .clr (1'b0),
         .config_digit (config_digit), 
         .config_add (config_add), 
@@ -54,8 +56,8 @@ module FSM(
     );
 
     Contador Contador_cronometro (
-        .clk    (clk),
-        .rst  (reset),
+        .clk (clk),
+        .rst (reset),
         .enable (crono_rodando),
         .clr(crono_reset),
         .config_digit (3'b000), 
@@ -68,21 +70,59 @@ module FSM(
         .h_dezena (h_dezena_cronometro)
     );
 
+    //DEBOUNCE DA TROCA DE ESTADOS
+    reg mode_stable; // O sinal limpo que a FSM vai usar
+    reg [1:0] mode_sync; // Sincronizador (evita o travamento dos LEDs)
+    reg [19:0] db_counter; // Contador de tempo
+    localparam DB_TIME = 500_000; //10ms em 50MHz
+
+    always @(posedge clk or negedge reset) begin
+        if (!reset) begin
+            mode_sync <= 0;
+            mode_stable <= 0;
+            db_counter <= 0;
+        end else begin
+            // 1. Sincronização (Joga o sinal sujo para dentro do clock)
+            mode_sync[0] <= btn_mode;
+            mode_sync[1] <= mode_sync[0];
+
+            // 2. Filtro de Tempo
+            if (mode_sync[1] != mode_stable) begin
+                // Se o sinal está diferente do estável, conta tempo
+                if (db_counter >= DB_TIME) begin
+                    mode_stable <= mode_sync[1]; // Confirma a mudança
+                    db_counter <= 0;
+                end else begin
+                    db_counter <= db_counter + 1;
+                end
+            end else begin
+                // Se o sinal oscilou e voltou, zera a contagem
+                db_counter <= 0;
+            end
+        end
+    end
+    // ---------------------------------------
+
+
+    reg prev_mode_limpo;
+    //VERIFICA O BOTAO DE TROCA DE MODO DE FORMA LIMPA
+    wire click_mode = (mode_stable && !prev_mode_limpo); 
+
     always @(posedge clk or negedge reset) begin
         if (!reset)begin
             crono_rodando <= 0;
             state <= RELOGIO;
-            prev_mode <= 0;
             prev_start <= 0;
         end
         else begin 
             prev_change <= btn_change;
-            prev_mode <= btn_mode;
             prev_start <= btn_start;
+            prev_mode_limpo <= mode_stable;
 
             case(state)
                 RELOGIO: begin
                     if (click_mode) state <= CRONOMETRO;
+                    crono_rodando <= 0;
                 end
                 CRONOMETRO: begin
                     if (click_mode) state <= CFG;
@@ -97,6 +137,10 @@ module FSM(
                         if(config_digit == 5) config_digit <= 0;
                         else config_digit <= config_digit + 1;
                     end
+                end
+                default: begin
+                    state <= RELOGIO;
+                    config_digit <= 0;
                 end
             endcase
         end

@@ -9,8 +9,15 @@ module relogio_simples_top(
     output wire [6:0] HEX2,
     output wire [6:0] HEX3,
     output wire [6:0] HEX4,
-    output wire [6:0] HEX5
+    output wire [6:0] HEX5,
+    output wire [2:0] LED
 );
+    wire [1:0] state_out;
+    assign LED[2] = (state_out == 2'b00);
+    assign LED[1] = (state_out == 2'b01);
+    assign LED[0] = (state_out == 2'b10);
+
+
 
     wire [3:0] s_unidade, s_dezena, m_unidade, m_dezena, h_unidade, h_dezena;
     wire is_config;
@@ -32,7 +39,8 @@ module relogio_simples_top(
         .h_unidade_fsm (h_unidade),
         .h_dezena_fsm (h_dezena),
         .config_digit (config_digit),
-        .is_config(is_config)
+        .is_config (is_config),
+        .state_out (state_out)
     );
 
     always @(posedge clk) begin

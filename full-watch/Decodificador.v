@@ -1,6 +1,6 @@
 module bcd_para_7seg(
-    input  wire [3:0] bcd_in, // Entrada: o número 0000 a 1001
-    output reg  [6:0] segments  // Saída: os 7 LEDs
+    input  wire [3:0] bcd_in, // Entrada: número 0000 a 1001
+    output reg  [6:0] segments  // Saída: 7 LEDs
 );
 
     always @(bcd_in)
